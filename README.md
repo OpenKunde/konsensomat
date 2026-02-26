@@ -66,7 +66,6 @@ Bei Webhosting den Webroot auf `public/` setzen und Schreibrechte für `files/da
 
 ## Screenshots
 
-Die Screenshots befinden sich im Ordner `screenshots/`.
 
 **Abb. 1: Desktop-Ansicht**  
  
