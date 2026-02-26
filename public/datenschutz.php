@@ -8,7 +8,7 @@
  *
  * See <https://www.gnu.org/licenses/>.
  */
-$pageTitle = "Datenschutz – KonsensOmat";
+$pageTitle = "🤖 Datenschutz – KonsensOmat";
 require __DIR__ . "/includes/header.php";
 ?>
 

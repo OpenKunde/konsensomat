@@ -161,6 +161,32 @@ button:hover {
     margin-top: 40px;
 }
 
+/* Open-Source-Hinweis */
+
+.open-source-hinweis {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.open-source-hinweis a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #70a1ff;
+}
+
+.open-source-hinweis a:hover {
+    opacity: 1;
+}
+
+.open-source-hinweis svg {
+    width: 18px;
+    height: 18px;
+}
+
 /* =========================
    Horizontale Linie (für Impressum etc.)
 ========================= */

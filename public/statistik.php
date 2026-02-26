@@ -8,7 +8,7 @@
  *
  * See <https://www.gnu.org/licenses/>.
  */
-$pageTitle = "Statistik – KonsensOmat";
+$pageTitle ="🤖 Statistik – KonsensOmat";
 require __DIR__ . "/includes/header.php";
 
 $dir = dirname(__DIR__) . "/files/data";
