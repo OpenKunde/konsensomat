@@ -86,7 +86,7 @@ if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION["token"]) {
     }
 }
 
-$pageTitle = "KonsensOmat";
+$pageTitle ="🤖 KonsensOmat";
 require __DIR__ . "/includes/header.php";
 ?>
 
