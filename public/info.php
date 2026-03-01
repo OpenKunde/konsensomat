@@ -16,8 +16,6 @@ require __DIR__ . "/includes/header.php";
 
 <h2>Was ist systemisches Konsensieren?</h2>
 
-<hr style="border:0;border-top:1px solid #555;margin:30px 0;">
-
 <p>
 Systemisches Konsensieren (SK) ist ein Entscheidungsverfahren, das den Widerstand gegen Vorschläge misst – statt nur die Zustimmung. So findet die Gruppe die Lösung, die von allen am ehesten mitgetragen werden kann.
 
