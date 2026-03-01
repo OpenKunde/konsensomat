@@ -117,45 +117,6 @@ for($i=179;$i>=0;$i--){
 </div>
 </div>
 
-<h2>Verteilung nach Benutzer*innenzahl</h2>
-
-<div class="card">
-<?php foreach ($participantDistribution as $count => $freq): ?>
-<div class="bar-container">
-<?= $count ?> Benutzer*innen
-<div class="bar" style="width:<?= ($freq/$maxBar)*100 ?>%"></div>
-</div>
-<?php endforeach; ?>
-</div>
-
-<h2>Erstellung nach Wochentag</h2>
-
-<div class="card">
-<?php
-$days = ["Mo","Di","Mi","Do","Fr","Sa","So"];
-foreach ($weekdayCount as $i => $val):
-?>
-<div class="bar-container">
-<?= $days[$i-1] ?>
-<div class="bar" style="width:<?= ($val/$maxBar)*100 ?>%"></div>
-</div>
-<?php endforeach; ?>
-</div>
-
-<h2>Nutzung über den Tag</h2>
-
-<div class="card">
-<?php
-$labels = ["0–6 Uhr","6–12 Uhr","12–18 Uhr","18–24 Uhr"];
-foreach ($hourBlocks as $i => $val):
-?>
-<div class="bar-container">
-<?= $labels[$i] ?>
-<div class="bar" style="width:<?= ($val/$maxBar)*100 ?>%"></div>
-</div>
-<?php endforeach; ?>
-</div>
-
 <p style="text-align:center;margin-top:30px;">
 <a href="index.php">← Zurück zur Startseite</a>
 </p>

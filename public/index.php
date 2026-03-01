@@ -8,6 +8,7 @@
  *
  * See <https://www.gnu.org/licenses/>.
  */
+
 session_start();
 
 if (empty($_SESSION["token"])) {
@@ -48,9 +49,10 @@ $id = $_GET["id"] ?? null;
 $poll = $id ? loadPoll($id, $dataDir, $expiryDays) : null;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION["token"]) {
-    die("Ungültiger CSRF-Token.");
-}
+
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION["token"]) {
+        die("Ungültiger CSRF-Token.");
+    }
 
     if (isset($_POST["create"])) {
         $id = randomId();
@@ -86,7 +88,13 @@ if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION["token"]) {
     }
 }
 
-$pageTitle ="🤖 KonsensOmat";
+/* ===== Dynamischer Page Title ===== */
+if ($poll && !empty($poll["question"])) {
+    $pageTitle = "🤖 " . htmlspecialchars($poll["question"]) . " – KonsensOmat";
+} else {
+    $pageTitle = "🤖 KonsensOmat";
+}
+
 require __DIR__ . "/includes/header.php";
 ?>
 
@@ -95,6 +103,7 @@ require __DIR__ . "/includes/header.php";
 <div class="card">
 <form method="post">
 <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+
 <label>Für welche Frage soll ein Konsens gesucht werden?</label>
 <input type="text" name="question" required>
 
@@ -178,7 +187,7 @@ usort($results, function($a, $b) {
 <div class="card">
 <h2>Ergebnis</h2>
 <h4>
-        (<?= $participantCount ?> <?= $participantCount == 1 ? 'Person hat' : 'Personen haben' ?> sich beteiligt)
+(<?= $participantCount ?> <?= $participantCount == 1 ? 'Person hat' : 'Personen haben' ?> sich beteiligt)
 </h4>
 
 <?php foreach ($results as $r): ?>
@@ -227,7 +236,7 @@ if (shareBtn) {
     shareBtn.addEventListener("click", async () => {
         const url = window.location.href;
         if (navigator.share) {
-            navigator.share({ title:"KonsensOmat", url:url });
+            navigator.share({ title: "KonsensOmat", url: url });
         } else {
             await navigator.clipboard.writeText(url);
             alert("Link kopiert");
