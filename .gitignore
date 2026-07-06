@@ -1,2 +1,24 @@
 /files/data/*
 !/files/data/.gitkeep
+
+/.env
+
+# Build artifacts (see Makefile / .forgejo workflows)
+/konsensomat
+/konsensomat.exe
+/konsensomat-arm64
+/konsensomat-armv7
+/konsensomat-darwin-arm64
+/dist/
+/pkg/
+*.zip
+
+# Go tooling
+*.test
+*.out
+
+# OS
+.DS_Store
+
+# Dev Containers (auto-generated feature lockfile)
+.devcontainer/devcontainer-lock.json

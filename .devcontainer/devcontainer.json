@@ -1,0 +1,45 @@
+{
+  "name": "KonsensOmat",
+
+  // Go 1.26 dev image — includes gopls, delve, and all standard Go tools.
+  "image": "mcr.microsoft.com/devcontainers/go:1.26",
+  "remoteUser": "vscode",
+
+  "features": {
+    // Forwards the host Docker socket so you can build/run containers
+    // from inside the devcontainer without a nested Docker daemon.
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": false
+    }
+  },
+
+  // Download Go module dependencies as soon as the container is created.
+  "postCreateCommand": "go mod download",
+
+  // Forward the app port so the browser can reach it directly.
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "KonsensOmat",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go"
+      ],
+      "settings": {
+        "go.toolsManagement.checkForUpdates": "local",
+        "[go]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "golang.go",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        }
+      }
+    }
+  }
+}

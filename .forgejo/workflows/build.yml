@@ -1,0 +1,57 @@
+name: build
+
+# Fast feedback for regular commits/PRs: just test and build for Linux
+# amd64. The full multi-platform build (Windows, RPi, macOS) only happens
+# on a version tag, via release.yml - `branches: ['**']` excludes tag
+# pushes here so the two workflows don't both run on `git push --tags`.
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+jobs:
+  go-build:
+    runs-on: docker
+    container:
+      image: golang:trixie
+
+    steps:
+      - name: Install Node.js dependencies
+        run: apt-get update && apt-get install -y curl nodejs
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: /go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Show Go version
+        run: go version
+
+      - name: Download modules
+        run: go mod download
+
+      - name: Test
+        run: go test ./...
+
+      - name: Set version
+        run: |
+          VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo dev)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Building version: ${VERSION}"
+
+      - name: Build (Linux amd64)
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X main.version=${VERSION}" -o konsensomat .
+
+      - name: Upload Linux amd64
+        uses: actions/upload-artifact@v3
+        with:
+          name: konsensomat-linux-amd64
+          path: konsensomat
+          retention-days: 7

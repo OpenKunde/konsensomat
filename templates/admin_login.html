@@ -1,0 +1,18 @@
+{{define "content"}}
+<div class="card">
+<h2>Admin-Login</h2>
+
+<form method="post" action="/admin/login">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+
+<label for="password">Admin-Passwort</label>
+<input type="password" id="password" name="password" autocomplete="current-password" required autofocus>
+
+{{if .Error}}
+<p class="notice">Falsches Passwort. Bitte versuche es erneut.</p>
+{{end}}
+
+<button type="submit">Anmelden</button>
+</form>
+</div>
+{{end}}

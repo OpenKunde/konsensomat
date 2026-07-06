@@ -1,0 +1,41 @@
+{{define "content"}}
+<div class="card">
+<form method="post" action="/create">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+
+<label for="question">Für welche Frage soll ein Konsens gesucht werden?</label>
+<input type="text" id="question" name="question" required>
+
+<label>Vorschläge</label>
+<div id="optionsList" class="options-list">
+<div class="option-input">
+<input type="text" name="options[]" placeholder="Vorschlag 1" required>
+<button type="button" class="remove-option" aria-label="Vorschlag entfernen">×</button>
+</div>
+<div class="option-input">
+<input type="text" name="options[]" placeholder="Vorschlag 2" required>
+<button type="button" class="remove-option" aria-label="Vorschlag entfernen">×</button>
+</div>
+</div>
+<button type="button" id="addOption" class="add-option">+ Vorschlag hinzufügen</button>
+
+<label for="duration_days">Laufzeit</label>
+<div class="select-wrapper">
+<select id="duration_days" name="duration_days">
+{{range .DurationOptions}}
+<option value="{{.}}"{{if eq . $.DefaultDuration}} selected{{end}}>{{.}} {{if eq . 1}}Tag{{else}}Tage{{end}}</option>
+{{end}}
+</select>
+</div>
+
+<label for="password">Passwort (optional)</label>
+<input type="password" id="password" name="password" autocomplete="new-password" placeholder="Schützt Zugriff">
+
+<p class="notice">
+Hinweis: Die Umfrage wird nach Ablauf der gewählten Laufzeit automatisch gelöscht. Als Erstellerin/Ersteller kannst du sie in diesem Browser jederzeit vorher selbst löschen. Mit einem Passwort kannst du zusätzlich den Zugriff für alle anderen einschränken - das Löschrecht bleibt dabei allein bei dir.
+</p>
+
+<button type="submit">Konsens finden</button>
+</form>
+</div>
+{{end}}

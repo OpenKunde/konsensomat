@@ -1,0 +1,107 @@
+{{define "content"}}
+<div class="card">
+<h2>{{.Poll.Question}}{{if .HasPassword}} <span title="Passwortgeschützt">🔒</span>{{end}}</h2>
+<p class="notice">Läuft bis {{.ExpiresAt}} Uhr</p>
+
+<form method="post" action="/poll/{{.ID}}/vote">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+<input type="text" name="name" placeholder="Dein Name oder Pseudonym" required>
+
+<p><strong>Wie fühlst du dich mit den folgenden Vorschlägen?</strong></p>
+
+{{range $i, $opt := .Poll.Options}}
+<div class="option-row">
+<div><strong>{{$opt}}</strong></div>
+
+<div class="emoji-group">
+<span data-value="0">🥳</span>
+<span data-value="1">🙂</span>
+<span data-value="2">😐</span>
+<span data-value="3">🙁</span>
+<span data-value="4">😢</span>
+<input type="hidden" name="votes[{{$i}}]" value="2">
+</div>
+
+<textarea class="comment-field" name="comments[{{$i}}]" placeholder="Kommentar bei starkem Widerstand"></textarea>
+</div>
+{{end}}
+
+<button type="submit">Abstimmen</button>
+</form>
+</div>
+
+<div class="card">
+<h2>Ergebnis</h2>
+<h4>
+({{.ParticipantCount}} {{if eq .ParticipantCount 1}}Person hat{{else}}Personen haben{{end}} sich beteiligt)
+</h4>
+
+{{range .Results}}
+<div class="result-row{{if eq .Index $.WinnerIndex}} winner{{end}}">
+<strong>{{.Text}}</strong><br>
+Widerstand: {{.Total}}
+
+{{range .Comments}}
+<div class="comment-entry">{{.}}</div>
+{{end}}
+</div>
+{{end}}
+
+<button id="shareBtn" type="button">Link teilen</button>
+
+{{if .IsOwner}}
+<button id="ownerShareBtn" type="button" data-owner-link="{{.OwnerLink}}">Admin-Link teilen</button>
+{{end}}
+</div>
+
+{{if .CanManage}}
+<details class="card manage-section">
+<summary><h2>Verwaltung</h2></summary>
+
+<form method="post" action="/poll/{{.ID}}/edit">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+
+<label for="question">Frage</label>
+<input type="text" id="question" name="question" value="{{.Poll.Question}}" required>
+
+<label>Vorschläge</label>
+<div id="optionsList" class="options-list">
+{{range .Poll.Options}}
+<div class="option-input">
+<input type="text" name="options[]" value="{{.}}" required>
+<button type="button" class="remove-option" aria-label="Vorschlag entfernen">×</button>
+</div>
+{{end}}
+</div>
+<button type="button" id="addOption" class="add-option">+ Vorschlag hinzufügen</button>
+
+<button type="submit">Frage & Vorschläge speichern</button>
+</form>
+
+<form method="post" action="/poll/{{.ID}}/expiry">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+<label for="duration_days">Laufzeit ab jetzt</label>
+<div class="select-wrapper">
+<select id="duration_days" name="duration_days">
+{{range .DurationOptions}}
+<option value="{{.}}"{{if eq . $.RemainingDays}} selected{{end}}>{{.}} {{if eq . 1}}Tag{{else}}Tage{{end}}</option>
+{{end}}
+</select>
+</div>
+<button type="submit">Laufzeit speichern</button>
+</form>
+
+<form method="post" action="/poll/{{.ID}}/password" class="password-manage">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+<label for="newPassword">{{if .HasPassword}}Neues Passwort (leer lassen zum Entfernen){{else}}Passwort setzen (optional){{end}}</label>
+<input id="newPassword" type="password" name="password" placeholder="Passwort" autocomplete="new-password">
+<button type="submit">{{if .HasPassword}}Passwort ändern/entfernen{{else}}Passwort setzen{{end}}</button>
+</form>
+
+<form method="post" action="/poll/{{.ID}}/delete" id="deleteForm">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+<button type="submit" class="delete">Umfrage löschen</button>
+</form>
+</details>
+{{end}}
+{{end}}

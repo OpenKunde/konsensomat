@@ -1,0 +1,62 @@
+{{define "content"}}
+<h2>Übersicht über aktive Umfragen</h2>
+
+<div class="card">
+<p><strong>{{.ActiveSurveys}}</strong> aktive Umfragen</p>
+<p><strong>{{.ActiveValid}}</strong> davon Umfragen mit min 2 Benutzer*innen</p>
+<p><strong>{{.ActiveNotValid}}</strong> Umfragen mit weniger als 2 Benutzer*innen</p>
+<p><strong>{{.ExpiringSoon}}</strong> Umfragen laufen bald ab</p>
+<p><strong>{{.AvgParticipants}}</strong> durchschnittliche Benutzer*innen pro Umfrage</p>
+<p><strong>{{.MaxParticipants}}</strong> größte Umfrage hat Benutzer*innen</p>
+</div>
+
+<h2>Aktivität Heatmap</h2>
+
+<div class="card">
+<div class="heatmap">
+{{range .HeatmapCells}}
+<div class="cell{{if .Class}} {{.Class}}{{end}}" title="{{.Date}}: {{.Count}}"></div>
+{{end}}
+</div>
+</div>
+
+{{if .IsAdmin}}
+<h2>Alle aktiven Umfragen</h2>
+
+<div class="card">
+{{if .Polls}}
+<div class="table-scroll">
+<table class="poll-list">
+<thead>
+<tr><th>Frage</th><th>Teilnehmer*innen</th><th>Läuft ab</th><th></th></tr>
+</thead>
+<tbody>
+{{range .Polls}}
+<tr>
+<td>{{.Question}}{{if .HasPassword}} 🔒{{end}}</td>
+<td>{{.ParticipantCount}}</td>
+<td>{{.ExpiresAt}}</td>
+<td><a href="/poll/{{.ID}}">Verwalten</a></td>
+</tr>
+{{end}}
+</tbody>
+</table>
+</div>
+{{else}}
+<p>Keine aktiven Umfragen.</p>
+{{end}}
+</div>
+
+<p class="text-center-mt30">
+Als Admin angemeldet.
+<form method="post" action="/admin/logout" class="inline-form">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+<button type="submit" class="btn-inline-small">Abmelden</button>
+</form>
+</p>
+{{end}}
+
+<p class="text-center-mt30">
+<a href="/">← Zurück zur Startseite</a>
+</p>
+{{end}}

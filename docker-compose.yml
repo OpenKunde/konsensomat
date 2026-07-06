@@ -1,0 +1,11 @@
+services:
+  app:
+    image: konsensomat:latest
+    container_name: konsensomat
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./files/data:/app/files/data
+    restart: unless-stopped

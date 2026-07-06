@@ -1,0 +1,547 @@
+/* =========================
+   Farbschema (Light/Dark)
+========================= */
+
+:root {
+    --bg: #f5f6fa;
+    --card-bg: #ffffff;
+    --text: #2f3640;
+    --text-muted: #57606f;
+    --border: #dcdde1;
+    --input-bg: #ffffff;
+    --accent: #4c6ef5;
+    --accent-contrast: #ffffff;
+    --success: #2ecc71;
+    --success-contrast: #123822;
+    --danger: #ff6b6b;
+    --danger-contrast: #3a0d0d;
+    --winner-bg: #2ed57333;
+    --heatmap-empty: #dfe4ea;
+}
+
+:root[data-theme="dark"] {
+    --bg: #2f3640;
+    --card-bg: #353b48;
+    --text: #f5f6fa;
+    --text-muted: #c8ccd8;
+    --border: #555c66;
+    --input-bg: #2f3640;
+    --accent: #70a1ff;
+    --accent-contrast: #10131a;
+    --success: #7bed9f;
+    --success-contrast: #10331d;
+    --danger: #ff6b6b;
+    --danger-contrast: #3a0d0d;
+    --winner-bg: #2ed57333;
+    --heatmap-empty: #2a2f36;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #2f3640;
+        --card-bg: #353b48;
+        --text: #f5f6fa;
+        --text-muted: #c8ccd8;
+        --border: #555c66;
+        --input-bg: #2f3640;
+        --accent: #70a1ff;
+        --accent-contrast: #10131a;
+        --success: #7bed9f;
+        --success-contrast: #10331d;
+        --danger: #ff6b6b;
+        --danger-contrast: #3a0d0d;
+        --winner-bg: #2ed57333;
+        --heatmap-empty: #2a2f36;
+    }
+}
+
+/* =========================
+   Grundlayout
+========================= */
+
+* {
+    color-scheme: light dark;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.container {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 15px;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+}
+
+/* =========================
+   Verwaltungsbereich (einklappbar)
+========================= */
+
+.manage-section summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.manage-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.manage-section summary h2 {
+    margin: 0;
+}
+
+.manage-section summary::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    margin-left: 12px;
+    border-right: 2px solid var(--text-muted);
+    border-bottom: 2px solid var(--text-muted);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+.manage-section[open] summary::after {
+    transform: rotate(225deg);
+}
+
+.manage-section summary:hover::after {
+    border-color: var(--accent);
+}
+
+.manage-section > form:first-of-type {
+    margin-top: 20px;
+}
+
+/* =========================
+   Kopfzeile
+========================= */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin: 0;
+}
+
+h1 a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.theme-toggle {
+    position: absolute;
+    right: 0;
+    width: auto;
+    padding: 8px 12px;
+    margin: 0;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.theme-toggle:hover {
+    opacity: 0.85;
+}
+
+/* =========================
+   Links (global einheitlich)
+========================= */
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* Footer-Links Abstand */
+.footer a {
+    margin: 0 10px;
+}
+
+/* =========================
+   Formulare
+========================= */
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+input,
+textarea,
+button {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input,
+textarea {
+    padding: 14px;
+    margin: 0 0 20px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text);
+    font-size: 16px;
+    font-family: inherit;
+}
+
+button {
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    background: var(--success);
+    color: var(--success-contrast);
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+/* =========================
+   Auswahlfelder (Select)
+========================= */
+
+.select-wrapper {
+    position: relative;
+    margin: 0 0 20px;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 14px 44px 14px 14px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text);
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:hover {
+    border-color: var(--accent);
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.select-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--text-muted);
+    border-bottom: 2px solid var(--text-muted);
+    transform: translateY(-65%) rotate(45deg);
+    transition: transform 0.2s ease;
+    pointer-events: none;
+}
+
+.select-wrapper:focus-within::after {
+    transform: translateY(-35%) rotate(225deg);
+}
+
+button.delete {
+    background: var(--danger);
+    color: var(--danger-contrast);
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* =========================
+   Dynamische Vorschlagsliste
+========================= */
+
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.option-input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.option-input input {
+    margin: 0;
+    flex: 1;
+}
+
+.remove-option {
+    width: auto;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 10px 14px;
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.remove-option:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+    opacity: 1;
+}
+
+.add-option {
+    background: transparent;
+    border: 2px dashed var(--border);
+    color: var(--text);
+    margin-bottom: 20px;
+}
+
+.add-option:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    opacity: 1;
+}
+
+/* =========================
+   Abstimmungsbereich
+========================= */
+
+.option-row {
+    margin: 20px 0;
+}
+
+.emoji-group {
+    display: flex;
+    justify-content: space-between;
+    font-size: 28px;
+}
+
+.emoji-group span {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.selected {
+    opacity: 1 !important;
+    transform: scale(1.2);
+}
+
+.comment-field {
+    display: none;
+}
+
+/* =========================
+   Ergebnisanzeige
+========================= */
+
+.result-row {
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.winner {
+    background: var(--winner-bg);
+}
+
+.comment-entry {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-left: 10px;
+}
+
+/* =========================
+   Hinweise & Footer
+========================= */
+
+.notice {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Open-Source-Hinweis */
+
+.open-source-hinweis {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.open-source-hinweis a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--accent);
+}
+
+.open-source-hinweis a:hover {
+    opacity: 1;
+}
+
+.open-source-hinweis svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* =========================
+   Horizontale Linie (für Impressum etc.)
+========================= */
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 30px 0;
+}
+
+/* =========================
+   Statistik Heatmap
+========================= */
+
+.heatmap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 14px);
+    gap: 4px;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.cell {
+    width: 14px;
+    height: 14px;
+    background: var(--heatmap-empty);
+    border-radius: 3px;
+}
+
+.l1 { background: #0e4429; }
+.l2 { background: #006d32; }
+.l3 { background: #26a641; }
+.l4 { background: #39d353; }
+
+.participant-toggle {
+    font-size: 14px;
+    font-weight: normal;
+    margin-left: 10px;
+    cursor: pointer;
+    color: var(--accent);
+}
+
+.participant-toggle:hover {
+    text-decoration: underline;
+}
+
+.participant-list {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+    margin-top: 10px;
+}
+
+.participant-entry {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-bottom: 5px;
+}
+
+/* =========================
+   Admin: Umfragenliste
+========================= */
+
+.poll-list {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.poll-list th,
+.poll-list td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.poll-list th {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+/* =========================
+   Utility-Klassen (ersetzen inline style="", damit die CSP ohne
+   'unsafe-inline' für style-src auskommt)
+========================= */
+
+.text-center-mt30 {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.btn-inline-small {
+    width: auto;
+    display: inline;
+    padding: 4px 10px;
+    margin: 0;
+}

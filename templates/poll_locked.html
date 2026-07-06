@@ -1,0 +1,20 @@
+{{define "content"}}
+<div class="card">
+<h2>🔒 Passwortgeschützt</h2>
+
+<p>Diese Umfrage ist durch ein Passwort geschützt.</p>
+
+<form method="post" action="/poll/{{.ID}}/unlock">
+<input type="hidden" name="token" value="{{.CSRFToken}}">
+
+<label for="password">Passwort</label>
+<input type="password" id="password" name="password" autocomplete="current-password" required autofocus>
+
+{{if .Error}}
+<p class="notice">Falsches Passwort. Bitte versuche es erneut.</p>
+{{end}}
+
+<button type="submit">Entsperren</button>
+</form>
+</div>
+{{end}}

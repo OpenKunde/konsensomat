@@ -1,12 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{.PageTitle}}</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/theme-init.js"></script>
+</head>
+<body>
+
+<div class="container">
+<div class="topbar">
+<h1><a href="/">🤖 KonsensOmat</a></h1>
+<button id="themeToggle" class="theme-toggle" type="button" aria-label="Farbschema umschalten" title="Farbschema umschalten">🌓</button>
+</div>
+
+{{block "content" .}}{{end}}
+
 <div class="footer">
-<a href="info.php">Was ist systemisches Konsensieren?</a>
-</p>
-<a href="impressum.php">Impressum</a>
-</p>
-<a href="datenschutz.php">Datenschutz</a>
+<a href="/info">Was ist systemisches Konsensieren?</a>
+<a href="/impressum">Impressum</a>
+<a href="/datenschutz">Datenschutz</a>
 </div>
 <div class="open-source-hinweis">
-  <a href="https://github.com/OpenKunde/konsensomat" target="_blank" rel="noopener">
+  <a href="https://git.serk-b.de/rev/konsensomat" target="_blank" rel="noopener">
     <span>Open Source (AGPLv3) – Quellcode auf GitHub</span>
     <svg height="18" width="18" viewBox="0 0 16 16" aria-hidden="true">
       <path fill="currentColor"
@@ -23,6 +40,8 @@
     </svg>
   </a>
 </div>
+</div>
 
+<script src="/static/app.js"></script>
 </body>
 </html>

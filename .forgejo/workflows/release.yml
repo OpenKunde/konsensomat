@@ -1,0 +1,88 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: docker
+    container:
+      image: golang:trixie
+
+    steps:
+      - name: Install tools
+        run: apt-get update && apt-get install -y curl jq zip nodejs
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download modules
+        run: go mod download
+
+      - name: Run tests
+        run: go test ./...
+
+      - name: Build binaries and create zip archives
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          # Linux amd64
+          mkdir -p pkg/linux-amd64
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X main.version=${VERSION}" -o pkg/linux-amd64/konsensomat .
+          chmod +x pkg/linux-amd64/konsensomat
+          cp Dockerfile Dockerfile.alpine docker-compose.yml .env.example LICENSE README.md pkg/linux-amd64/
+          cd pkg/linux-amd64 && zip -r ../../konsensomat-${VERSION}-linux-amd64.zip . && cd ../..
+
+          # Linux arm64
+          mkdir -p pkg/linux-arm64
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="-X main.version=${VERSION}" -o pkg/linux-arm64/konsensomat .
+          chmod +x pkg/linux-arm64/konsensomat
+          cp Dockerfile Dockerfile.alpine docker-compose.yml .env.example LICENSE README.md pkg/linux-arm64/
+          cd pkg/linux-arm64 && zip -r ../../konsensomat-${VERSION}-linux-arm64.zip . && cd ../..
+
+          # Linux armv7
+          mkdir -p pkg/linux-armv7
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="-X main.version=${VERSION}" -o pkg/linux-armv7/konsensomat .
+          chmod +x pkg/linux-armv7/konsensomat
+          cp Dockerfile Dockerfile.alpine docker-compose.yml .env.example LICENSE README.md pkg/linux-armv7/
+          cd pkg/linux-armv7 && zip -r ../../konsensomat-${VERSION}-linux-armv7.zip . && cd ../..
+
+          # Windows amd64 (no Docker files)
+          mkdir -p pkg/windows-amd64
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-X main.version=${VERSION}" -o pkg/windows-amd64/konsensomat.exe .
+          cp .env.example LICENSE README.md pkg/windows-amd64/
+          cd pkg/windows-amd64 && zip -r ../../konsensomat-${VERSION}-windows-amd64.zip . && cd ../..
+
+          # macOS Apple Silicon (arm64)
+          mkdir -p pkg/darwin-arm64
+          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-X main.version=${VERSION}" -o pkg/darwin-arm64/konsensomat .
+          chmod +x pkg/darwin-arm64/konsensomat
+          cp Dockerfile Dockerfile.alpine docker-compose.yml .env.example LICENSE README.md pkg/darwin-arm64/
+          cd pkg/darwin-arm64 && zip -r ../../konsensomat-${VERSION}-darwin-arm64.zip . && cd ../..
+
+      - name: Create release and upload assets
+        env:
+          VERSION: ${{ github.ref_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_ID=$(curl -sf -X POST \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Content-Type: application/json" \
+            "${GITHUB_SERVER_URL}/api/v1/repos/${GITHUB_REPOSITORY}/releases" \
+            -d "{\"tag_name\":\"${VERSION}\",\"name\":\"${VERSION}\",\"draft\":false,\"prerelease\":false}" \
+            | jq -r '.id')
+
+          for file in \
+            konsensomat-${VERSION}-linux-amd64.zip \
+            konsensomat-${VERSION}-linux-arm64.zip \
+            konsensomat-${VERSION}-linux-armv7.zip \
+            konsensomat-${VERSION}-windows-amd64.zip \
+            konsensomat-${VERSION}-darwin-arm64.zip; do
+            curl -sf -X POST \
+              -H "Authorization: token ${GH_TOKEN}" \
+              -H "Content-Type: application/octet-stream" \
+              "${GITHUB_SERVER_URL}/api/v1/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=$(basename ${file})" \
+              --data-binary "@${file}"
+          done

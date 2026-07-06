@@ -1,0 +1,31 @@
+# Dockerfile.alpine — runtime image built from a pre-compiled artifact.
+# Alternative to the default (scratch-based) Dockerfile: bigger, but ships a
+# shell and wget, which is what enables the HEALTHCHECK below.
+#
+#   make build                                  # builds ./konsensomat for linux/amd64
+#   docker build -f Dockerfile.alpine -t konsensomat:alpine .
+#
+# The build context must contain:
+#   konsensomat   (Linux amd64 binary, produced by `make build`)
+
+FROM alpine:3.20
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+WORKDIR /app
+
+COPY konsensomat .
+
+# Templates and static assets are already compiled into the binary via
+# go:embed - only the (empty, writable) data directory needs preparing here.
+RUN mkdir -p files/data && chown -R appuser:appgroup /app
+
+USER appuser
+
+EXPOSE 8080
+VOLUME ["/app/files/data"]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget -qO- http://localhost:8080/ || exit 1
+
+CMD ["./konsensomat"]
