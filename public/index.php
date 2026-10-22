@@ -46,6 +46,7 @@ function deletePoll($id, $dataDir) {
 }
 
 $id = $_GET["id"] ?? null;
+if (!is_string($id) || !preg_match('/^[0-9a-f]{6}$/D', $id)) $id = null;
 $poll = $id ? loadPoll($id, $dataDir, $expiryDays) : null;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
